@@ -81,7 +81,7 @@ int main() {
         // Add a new random tile to the board
         addRandomTile(board);
 
-        // To-do-list: Game over conditions, score tracking 
+        // To-do-list: Tile moving -logic, Game over conditions, score tracking 
     }
 
     return 0;
