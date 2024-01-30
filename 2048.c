@@ -4,6 +4,13 @@
 
 #define SIZE 4
 
+void initializeBoard(int board[SIZE][SIZE]);
+void displayBoard(int board[SIZE][SIZE]);
+void addRandomTile(int board[SIZE][SIZE]);
+void moveTiles(int board[SIZE][SIZE], char direction);
+void slideTiles(int board[SIZE][SIZE], char direction);
+void mergeTiles(int board[SIZE][SIZE], char direction);
+
 // Initialize the game board
 void initializeBoard(int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; ++i) {
@@ -49,7 +56,123 @@ void addRandomTile(int board[SIZE][SIZE]) {
 
 // Function to move tiles in a specified direction
 void moveTiles(int board[SIZE][SIZE], char direction) {
-    // Moving tiles logic here
+    slideTiles(board, direction);
+    mergeTiles(board, direction);
+    slideTiles(board, direction);
+}
+
+void slideTiles(int board[SIZE][SIZE], char direction) {
+    // Sliding tiles in the specified direction
+    int i, j, k, temp;
+
+    switch (direction) {
+        case 'w': // Slide Up
+            for (j = 0; j < SIZE; ++j) {
+                k = 0;
+                for (i = 0; i < SIZE; ++i) {
+                    if (board[i][j] != 0) {
+                        temp = board[i][j];
+                        board[i][j] = 0;
+                        board[k][j] = temp;
+                        k++;
+                    }
+                }
+            }
+            break;
+
+        case 'a': // Slide Left
+            for (i = 0; i < SIZE; ++i) {
+                k = 0;
+                for (j = 0; j < SIZE; ++j) {
+                    if (board[i][j] != 0) {
+                        temp = board[i][j];
+                        board[i][j] = 0;
+                        board[i][k] = temp;
+                        k++;
+                    }
+                }
+            }
+            break;
+
+        case 's': // Slide Down
+            for (j = 0; j < SIZE; ++j) {
+                k = SIZE - 1;
+                for (i = SIZE - 1; i >= 0; --i) {
+                    if (board[i][j] != 0) {
+                        temp = board[i][j];
+                        board[i][j] = 0;
+                        board[k][j] = temp;
+                        k--;
+                    }
+                }
+            }
+            break;
+
+        case 'd': // Slide Right
+            for (i = 0; i < SIZE; ++i) {
+                k = SIZE - 1;
+                for (j = SIZE - 1; j >= 0; --j) {
+                    if (board[i][j] != 0) {
+                        temp = board[i][j];
+                        board[i][j] = 0;
+                        board[i][k] = temp;
+                        k--;
+                    }
+                }
+            }
+            break;
+    }
+}
+
+void mergeTiles(int board[SIZE][SIZE], char direction) {
+    // Merging adjacent tiles in the specified direction
+    int i, j;
+
+    switch (direction) {
+        case 'w': // Merge Up
+            for (j = 0; j < SIZE; ++j) {
+                for (i = 0; i < SIZE - 1; ++i) {
+                    if (board[i][j] == board[i + 1][j]) {
+                        board[i][j] *= 2;
+                        board[i + 1][j] = 0;
+                    }
+                }
+            }
+            break;
+
+        case 'a': // Merge Left
+            for (i = 0; i < SIZE; ++i) {
+                for (j = 0; j < SIZE - 1; ++j) {
+                    if (board[i][j] == board[i][j + 1]) {
+                        board[i][j] *= 2;
+                        board[i][j + 1] = 0;
+                    }
+                }
+            }
+            break;
+
+        case 's': // Merge Down
+            for (j = 0; j < SIZE; ++j) {
+                for (i = SIZE - 1; i > 0; --i) {
+                    if (board[i][j] == board[i - 1][j]) {
+                        board[i][j] *= 2;
+                        board[i - 1][j] = 0;
+                    }
+                }
+            }
+            break;
+
+        case 'd': // Merge Right
+            for (i = 0; i < SIZE; ++i) {
+                for (j = SIZE - 1; j > 0; --j) {
+                    if (board[i][j] == board[i][j - 1]) {
+                        board[i][j] *= 2;
+                        board[i][j - 1] = 0;
+                    }
+                }
+            }
+            break;
+    }
 }
 
 int main() {
