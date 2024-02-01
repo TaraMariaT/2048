@@ -198,13 +198,37 @@ int main() {
         printf("Enter move (w/a/s/d): ");
         scanf(" %c", &move);
 
-        // Move tiles based on user input
+        // Create a copy of the board before the move
+        int prevBoard[SIZE][SIZE];
+        for (int i = 0; i < SIZE; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                prevBoard[i][j] = board[i][j];
+            }
+        }
+
         moveTiles(board, move);
 
-        // Add a new random tile to the board
-        addRandomTile(board);
+        // Check if the board has changed
+        int boardChanged = 0;
+        for (int i = 0; i < SIZE; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                if (board[i][j] != prevBoard[i][j]) {
+                    boardChanged = 1;
+                    break;
+                }
+            }
+            if (boardChanged) {
+                break;
+            }
+        }
 
-        // To-do-list: Tile moving -logic, Game over conditions, score tracking 
+        // Add a new random tile only if the board has changed
+        if (boardChanged) {
+            addRandomTile(board);
+        }
+
+
+        // To-do-list: Game over conditions, score tracking 
     }
 
     return 0;
