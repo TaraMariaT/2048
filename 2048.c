@@ -10,6 +10,7 @@ void addRandomTile(int board[SIZE][SIZE]);
 void moveTiles(int board[SIZE][SIZE], char direction);
 void slideTiles(int board[SIZE][SIZE], char direction);
 void mergeTiles(int board[SIZE][SIZE], char direction);
+int isGameOver(int board[SIZE][SIZE]);
 
 // Initialize the game board
 void initializeBoard(int board[SIZE][SIZE]) {
@@ -175,6 +176,26 @@ void mergeTiles(int board[SIZE][SIZE], char direction) {
     }
 }
 
+int isGameOver(int board[SIZE][SIZE]) {
+    // Check if the game is over
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            // Check for an empty cell
+            if (board[i][j] == 0) {
+                return 0; // Game is not over
+            }
+
+            // Check for adjacent cells with the same value
+            if ((i < SIZE - 1 && board[i][j] == board[i + 1][j]) ||
+                (j < SIZE - 1 && board[i][j] == board[i][j + 1])) {
+                return 0; // Game is not over
+            }
+        }
+    }
+
+    return 1; // Game is over
+}
+
 int main() {
     int board[SIZE][SIZE];
     char move;
@@ -185,12 +206,12 @@ int main() {
     // Initialize the game board
     initializeBoard(board);
 
-    // Add firts two tiles to the board
+    // Add the first two tiles to the board
     addRandomTile(board);
     addRandomTile(board);
 
     // Main game loop
-    while (1) {
+    while (!isGameOver(board)) {
         // Display the game board
         displayBoard(board);
 
@@ -227,9 +248,11 @@ int main() {
             addRandomTile(board);
         }
 
-
-        // To-do-list: Game over conditions, score tracking 
+        // To-do-list: Score tracking
     }
+
+    displayBoard(board);  // Display the final state of the board
+    printf("Game over!\n");
 
     return 0;
 }
