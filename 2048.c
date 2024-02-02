@@ -10,6 +10,7 @@ void addRandomTile(int board[SIZE][SIZE]);
 void moveTiles(int board[SIZE][SIZE], char direction);
 void slideTiles(int board[SIZE][SIZE], char direction);
 void mergeTiles(int board[SIZE][SIZE], char direction);
+int calculateMergedTilesScore(int board[SIZE][SIZE], int prevBoard[SIZE][SIZE]);
 int isGameOver(int board[SIZE][SIZE]);
 
 // Initialize the game board
@@ -176,6 +177,20 @@ void mergeTiles(int board[SIZE][SIZE], char direction) {
     }
 }
 
+// Function to calculate the score based on merged tiles
+int calculateMergedTilesScore(int board[SIZE][SIZE], int prevBoard[SIZE][SIZE]) {
+    int score = 0;
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            // Check for merged tiles
+            if (board[i][j] != 0 && board[i][j] == prevBoard[i][j]) {
+                score += board[i][j]; // Add the value of the merged tile to the score
+            }
+        }
+    }
+    return score;
+}
+
 int isGameOver(int board[SIZE][SIZE]) {
     // Check if the game is over
     for (int i = 0; i < SIZE; ++i) {
@@ -199,6 +214,7 @@ int isGameOver(int board[SIZE][SIZE]) {
 int main() {
     int board[SIZE][SIZE];
     char move;
+    int score = 0;
 
     // Set seed for random number generation
     srand(time(NULL));
@@ -212,8 +228,10 @@ int main() {
 
     // Main game loop
     while (!isGameOver(board)) {
+
         // Display the game board
         displayBoard(board);
+        printf("Score: %d\n", score);
 
         // Get user input for the next move
         printf("Enter move (w/a/s/d): ");
@@ -243,16 +261,16 @@ int main() {
             }
         }
 
-        // Add a new random tile only if the board has changed
+        // If the board has changed, update the score and add a new random tile
         if (boardChanged) {
             addRandomTile(board);
+            // Update the score based on merged tiles
+            score += calculateMergedTilesScore(board, prevBoard);
         }
-
-        // To-do-list: Score tracking
     }
 
     displayBoard(board);  // Display the final state of the board
-    printf("Game over!\n");
+    printf("Game over! Score: %d\n", score);
 
     return 0;
 }
